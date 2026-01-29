@@ -17,7 +17,7 @@ interface Model {
 
 interface Phone {
   id: string;
-  starting_number: string;
+  phone_number: string;
   phone_number_type: string;
   cost_information: {
     monthly_cost: string[];
@@ -205,7 +205,7 @@ export default function AssistantsTable() {
               <label htmlFor="phone" className="flex justify-between">
                 <span>Phone Number Available</span>
                 {phone.map((e) => {
-                  if (selectedPhone === e.starting_number) {
+                  if (selectedPhone === e.phone_number) {
                     console.log(e.cost_information.monthly_cost);
                     return (
                       <span>
@@ -224,8 +224,8 @@ export default function AssistantsTable() {
               >
                 <option value="">Select options</option>
                 {phone.map((e) => (
-                  <option key={e.starting_number} value={e.starting_number}>
-                    {e.starting_number} : {e.phone_number_type}
+                  <option key={e.phone_number} value={e.phone_number}>
+                    {e.phone_number} : {e.phone_number_type}
                   </option>
                 ))}
               </select>
@@ -369,12 +369,12 @@ export default function AssistantsTable() {
                 id="phone"
                 className="outline outline-2 outline-[#ddd]"
                 value={selectedPhone}
-                // onChange={(e) => setSelectedPhone(e.target.value)}
+                onChange={(e) => setSelectedPhone(e.target.value)}
               >
                 <option value="">Select options</option>
                 {phone.map((e) => (
-                  <option key={e.starting_number} value={e.starting_number}>
-                    {e.starting_number} : {e.phone_number_type}
+                  <option key={e.phone_number} value={e.phone_number}>
+                    {e.phone_number} : {e.phone_number_type}
                   </option>
                 ))}
               </select>
