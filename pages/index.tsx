@@ -237,9 +237,6 @@ export default function AssistantsTable() {
               <th className="outline outline-1 outline-[#ddd] p-2">
                 Created At
               </th>
-              <th className="outline outline-1 outline-[#ddd] p-2">
-                Updated At
-              </th>
               <th className="outline outline-1 outline-[#ddd] p-2"></th>
             </tr>
           </thead>
@@ -288,11 +285,6 @@ export default function AssistantsTable() {
                 >
                   {assistant.created_at
                     ? new Date(assistant.created_at).toLocaleString()
-                    : "N/A"}
-                </td>
-                <td className="outline outline-1 outline-[#ddd] p-2">
-                  {assistant.updated_at
-                    ? new Date(assistant.updated_at).toLocaleString()
                     : "N/A"}
                 </td>
                 <td className="outline outline-1 outline-[#ddd] p-2 flex gap-2">
