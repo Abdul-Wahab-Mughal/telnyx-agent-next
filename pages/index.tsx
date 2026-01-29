@@ -202,14 +202,14 @@ export default function AssistantsTable() {
               </select>
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="phone" className="flex">
+              <label htmlFor="phone" className="flex justify-between">
                 <span>Phone Number Available</span>
                 {phone.map((e) => {
                   if (selectedPhone === e.starting_number) {
                     console.log(e.cost_information.monthly_cost);
                     return (
                       <span>
-                        {e.cost_information.monthly_cost}$
+                        Monthly:{e.cost_information.monthly_cost}$
                       </span>
                     );
                   }
@@ -348,7 +348,7 @@ export default function AssistantsTable() {
               <select
                 id="model"
                 className="outline outline-2 outline-[#ddd]"
-                value={selectedModel}
+                value={updateAgent?.model || ""}
                 onChange={(e) =>
                   setUpdateAgent((prev) =>
                     prev ? { ...prev, model: e.target.value } : null
@@ -369,7 +369,7 @@ export default function AssistantsTable() {
                 id="phone"
                 className="outline outline-2 outline-[#ddd]"
                 value={selectedPhone}
-                onChange={(e) => setSelectedPhone(e.target.value)}
+                // onChange={(e) => setSelectedPhone(e.target.value)}
               >
                 <option value="">Select options</option>
                 {phone.map((e) => (
