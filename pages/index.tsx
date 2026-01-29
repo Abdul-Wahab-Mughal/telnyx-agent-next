@@ -94,6 +94,10 @@ export default function AssistantsTable() {
             name: value,
             instructions: "These are the instructions for the new assistant",
             model: selectedModel,
+            voice_settings: {
+              voice: "female",
+              language: "en-US",
+            },
           }),
         });
 
