@@ -238,9 +238,6 @@ export default function AssistantsTable() {
             <tr>
               <th className="outline outline-1 outline-[#ddd] p-2">ID</th>
               <th className="outline outline-1 outline-[#ddd] p-2">Name</th>
-              {/* <th className="outline outline-1 outline-[#ddd] p-2">
-                Description
-              </th> */}
               <th className="outline outline-1 outline-[#ddd] p-2">Model</th>
               <th className="outline outline-1 outline-[#ddd] p-2">Status</th>
               <th className="outline outline-1 outline-[#ddd] p-2">
@@ -261,9 +258,6 @@ export default function AssistantsTable() {
                 <td className="outline outline-1 outline-[#ddd] p-2">
                   {assistant.name}
                 </td>
-                {/* <td className="outline outline-1 outline-[#ddd] p-2">
-                  {assistant.description || "N/A"}
-                </td> */}
                 <td className="outline outline-1 outline-[#ddd] p-2 max-w-[11ch] overflow-hidden whitespace-nowrap text-ellipsis">
                   {assistant.model || "N/A"}
                 </td>
@@ -359,8 +353,8 @@ export default function AssistantsTable() {
               >
                 <option value="">Select options</option>
                 {phone.map((e) => (
-                  <option key={e.phone_number} value={e.phone_number}>
-                    {e.phone_number}
+                  <option key={e.starting_number} value={e.starting_number}>
+                    {e.starting_number} : {e.phone_number_type}
                   </option>
                 ))}
               </select>
