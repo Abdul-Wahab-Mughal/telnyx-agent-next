@@ -17,8 +17,8 @@ interface Model {
 
 interface Phone {
   id: string;
-  phone_numbers: string;
-  phone_number: string;
+  starting_number: string;
+  phone_number_type: string;
 }
 
 export default function AssistantsTable() {
@@ -44,7 +44,7 @@ export default function AssistantsTable() {
     try {
       const res = await fetch("/api/telnyx/all-assistants");
       const data = await res.json();
-      // console.log(data);
+      console.log(data);
       setAssistants(data || []);
     } catch (error) {
       console.error("Failed to fetch assistants:", error);
@@ -75,6 +75,7 @@ export default function AssistantsTable() {
       console.log("failed to get Model List");
     }
   };
+
   useEffect(() => {
     fetchAssistants();
     getModel();
@@ -164,58 +165,73 @@ export default function AssistantsTable() {
         <h1 className="text-5xl font-bold text-center pb-10">
           Telnyx Assistants
         </h1>
-        <div className="flex flex-col justify-center gap-5 p-5 border w-96">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="name">Agent Name</label>
-            <input
-              className="outline outline-2 outline-[#ddd]"
-              id="name"
-              type="text"
-              placeholder="Name"
-              onChange={(e) => setValue(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="model">Model</label>
-            <select
-              id="model"
-              className="outline outline-2 outline-[#ddd]"
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
+        <div className="flex flex-row gap-5">
+          <div className="flex flex-col gap-5 p-5 border w-96">
+            <h2 className="text-2xl">Creating Agent</h2>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="name">Agent Name</label>
+              <input
+                className="outline outline-2 outline-[#ddd]"
+                id="name"
+                type="text"
+                placeholder="Name"
+                onChange={(e) => setValue(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="model">Model</label>
+              <select
+                id="model"
+                className="outline outline-2 outline-[#ddd]"
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+              >
+                <option value="">Select options</option>
+                {model.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.id}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="phone">Phone Number Available</label>
+              <select
+                id="phone"
+                className="outline outline-2 outline-[#ddd]"
+                value={selectedPhone}
+                onChange={(e) => setSelectedPhone(e.target.value)}
+              >
+                <option value="">Select options</option>
+                {phone.map((e) => (
+                  <option key={e.starting_number} value={e.starting_number}>
+                    {e.starting_number} : {e.phone_number_type}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              className="p-2 border-2"
+              disabled={loading}
+              onClick={createAssistant}
+              style={{ padding: "0.5rem 1rem" }}
             >
-              <option value="">Select options</option>
-              {model.map((e) => (
-                <option key={e.id} value={e.id}>
-                  {e.id}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="phone">Phone</label>
-            <select
-              id="phone"
-              className="outline outline-2 outline-[#ddd]"
-              value={selectedPhone}
-              onChange={(e) => setSelectedPhone(e.target.value)}
-            >
-              <option value="">Select options</option>
-              {phone.map((e) => (
-                <option key={e.phone_number} value={e.phone_number}>
-                  {e.phone_number}
-                </option>
-              ))}
-            </select>
+              {loading ? "Creating..." : "Create Agent"}
+            </button>
           </div>
 
-          <button
-            className="p-2 border-2"
-            disabled={loading}
-            onClick={createAssistant}
-            style={{ padding: "0.5rem 1rem" }}
-          >
-            {loading ? "Creating..." : "Create Agent"}
-          </button>
+          <div className="flex flex-col gap-5 p-5 border w-96">
+            <h2 className="text-2xl">Buy Phone Number</h2>
+            <button
+              className="p-2 border-2"
+              disabled={loading}
+              onClick={createAssistant}
+              style={{ padding: "0.5rem 1rem" }}
+            >
+              {loading ? "Creating..." : "Create Phone Number"}
+            </button>
+          </div>
         </div>
 
         <table
@@ -234,6 +250,7 @@ export default function AssistantsTable() {
               </th> */}
               <th className="outline outline-1 outline-[#ddd] p-2">Model</th>
               <th className="outline outline-1 outline-[#ddd] p-2">Status</th>
+              <th className="outline outline-1 outline-[#ddd] p-2">Phone Number</th>
               <th className="outline outline-1 outline-[#ddd] p-2">
                 Created At
               </th>
@@ -270,6 +287,9 @@ export default function AssistantsTable() {
                   }}
                 >
                   {assistant.model || "N/A"}
+                </td>
+                <td className="outline outline-1 outline-[#ddd] p-2">
+                  {assistant.status || "N/A"}
                 </td>
                 <td className="outline outline-1 outline-[#ddd] p-2">
                   {assistant.status || "N/A"}
