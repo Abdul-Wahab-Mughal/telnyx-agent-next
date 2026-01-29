@@ -35,8 +35,8 @@ export default function AssistantsTable() {
   const [loading, setLoading] = useState<boolean>(false);
   const [updateBox, setUpdateBox] = useState<boolean>(false);
 
-  // Fetch
   //
+  // Fetch
   //
 
   // Agent List
@@ -221,26 +221,19 @@ export default function AssistantsTable() {
             </button>
           </div>
 
-          <div className="flex flex-col gap-5 p-5 border w-96">
+          <div className="flex flex-col gap-5 p-5 border w-96 hidden">
             <h2 className="text-2xl">Buy Phone Number</h2>
             <button
               className="p-2 border-2"
               disabled={loading}
-              onClick={createAssistant}
               style={{ padding: "0.5rem 1rem" }}
             >
-              {loading ? "Creating..." : "Create Phone Number"}
+              {loading ? "Buying..." : "Buy Phone Number"}
             </button>
           </div>
         </div>
 
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginTop: "1rem",
-          }}
-        >
+        <table className="w-full mt-[1rem] border-collapse">
           <thead>
             <tr>
               <th className="outline outline-1 outline-[#ddd] p-2">ID</th>
@@ -250,7 +243,9 @@ export default function AssistantsTable() {
               </th> */}
               <th className="outline outline-1 outline-[#ddd] p-2">Model</th>
               <th className="outline outline-1 outline-[#ddd] p-2">Status</th>
-              <th className="outline outline-1 outline-[#ddd] p-2">Phone Number</th>
+              <th className="outline outline-1 outline-[#ddd] p-2">
+                Phone Number
+              </th>
               <th className="outline outline-1 outline-[#ddd] p-2">
                 Created At
               </th>
@@ -260,15 +255,7 @@ export default function AssistantsTable() {
           <tbody>
             {assistants.map((assistant) => (
               <tr key={assistant.id}>
-                <td
-                  className="outline outline-1 outline-[#ddd] p-2"
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "22ch",
-                  }}
-                >
+                <td className="outline outline-1 outline-[#ddd] p-2 max-w-[22ch] overflow-hidden whitespace-nowrap text-ellipsis">
                   {assistant.id}
                 </td>
                 <td className="outline outline-1 outline-[#ddd] p-2">
@@ -277,15 +264,7 @@ export default function AssistantsTable() {
                 {/* <td className="outline outline-1 outline-[#ddd] p-2">
                   {assistant.description || "N/A"}
                 </td> */}
-                <td
-                  className="outline outline-1 outline-[#ddd] p-2"
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "11ch",
-                  }}
-                >
+                <td className="outline outline-1 outline-[#ddd] p-2 max-w-[11ch] overflow-hidden whitespace-nowrap text-ellipsis">
                   {assistant.model || "N/A"}
                 </td>
                 <td className="outline outline-1 outline-[#ddd] p-2">
@@ -294,15 +273,7 @@ export default function AssistantsTable() {
                 <td className="outline outline-1 outline-[#ddd] p-2">
                   {assistant.status || "N/A"}
                 </td>
-                <td
-                  className="outline outline-1 outline-[#ddd] p-2"
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "17.5ch",
-                  }}
-                >
+                <td className="outline outline-1 outline-[#ddd] p-2 max-w-[17.5ch] overflow-hidden whitespace-nowrap text-ellipsis">
                   {assistant.created_at
                     ? new Date(assistant.created_at).toLocaleString()
                     : "N/A"}
