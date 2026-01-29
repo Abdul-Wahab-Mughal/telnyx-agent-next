@@ -1,0 +1,16 @@
+import Telnyx from "telnyx";
+
+export default async function handler(req, res) {
+  const client = new Telnyx({
+    apiKey: process.env.TELNYX_API_KEY, // This is the default and can be omitted
+  });
+
+  // Automatically fetches more pages as needed.
+  try {
+    const availablePhoneNumbers = await client.availablePhoneNumbers.list();
+    // res.status(200).json(availablePhoneNumbers.data);
+    res.status(200).json();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
