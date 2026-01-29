@@ -173,7 +173,7 @@ export default function AssistantsTable() {
           Telnyx Assistants
         </h1>
         <div className="flex flex-row gap-5">
-          <div className="flex flex-col gap-5 p-5 border w-96">
+          <div className="flex flex-col gap-5 p-4 border w-96 bg-white relative rounded-lg">
             <h2 className="text-2xl">Creating Agent</h2>
             <div className="flex flex-col gap-1">
               <label htmlFor="name">Agent Name</label>
@@ -208,9 +208,7 @@ export default function AssistantsTable() {
                   if (selectedPhone === e.phone_number) {
                     console.log(e.cost_information.monthly_cost);
                     return (
-                      <span>
-                        Monthly:{e.cost_information.monthly_cost}$
-                      </span>
+                      <span>Monthly:{e.cost_information.monthly_cost}$</span>
                     );
                   }
                   return null;
@@ -241,7 +239,7 @@ export default function AssistantsTable() {
             </button>
           </div>
 
-          <div className="flex flex-col gap-5 p-5 border w-96 hidden">
+          <div className="flex flex-col gap-5 p-4 border w-96 bg-white relative rounded-lg hidden">
             <h2 className="text-2xl">Buy Phone Number</h2>
             <button
               className="p-2 border-2"
@@ -318,12 +316,10 @@ export default function AssistantsTable() {
       </div>
       {updateBox && (
         <div className="absolute top-0 left-0 bg-black/75 w-full h-full flex justify-center items-center">
-          <div className="flex flex-col justify-center gap-5 p-5 border w-96 bg-white relative">
+          <div className="flex flex-col justify-center gap-5 p-4 border w-96 bg-white relative rounded-lg">
             <div
-              className=" cursor-pointer absolute top-5 right-5"
-              onClick={() => {
-                setUpdateBox(false);
-              }}
+              className="cursor-pointer absolute top-1 right-1 text-white bg-black px-2 py-1 rounded-md"
+              onClick={() => setUpdateBox(false)}
             >
               X
             </div>
@@ -364,7 +360,18 @@ export default function AssistantsTable() {
               </select>
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="phone">Phone</label>
+              <label htmlFor="phone" className="flex justify-between">
+                <span>Phone Number</span>
+                {phone.map((e) => {
+                  if (selectedPhone === e.phone_number) {
+                    console.log(e.cost_information.monthly_cost);
+                    return (
+                      <span>Monthly:{e.cost_information.monthly_cost}$</span>
+                    );
+                  }
+                  return null;
+                })}
+              </label>
               <select
                 id="phone"
                 className="outline outline-2 outline-[#ddd]"
