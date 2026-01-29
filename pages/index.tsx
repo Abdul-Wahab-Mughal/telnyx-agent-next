@@ -19,6 +19,9 @@ interface Phone {
   id: string;
   starting_number: string;
   phone_number_type: string;
+  cost_information: {
+    monthly_cost: string[];
+  };
 }
 
 export default function AssistantsTable() {
@@ -199,7 +202,20 @@ export default function AssistantsTable() {
               </select>
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="phone">Phone Number Available</label>
+              <label htmlFor="phone" className="flex">
+                <span>Phone Number Available</span>
+                {phone.map((e) => {
+                  if (selectedPhone === e.starting_number) {
+                    console.log(e.cost_information.monthly_cost);
+                    return (
+                      <span>
+                        {e.cost_information.monthly_cost}$
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+              </label>
               <select
                 id="phone"
                 className="outline outline-2 outline-[#ddd]"
