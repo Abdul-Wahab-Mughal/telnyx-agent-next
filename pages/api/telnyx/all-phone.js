@@ -8,8 +8,8 @@ export default async function handler(req, res) {
   // Automatically fetches more pages as needed.
   try {
     const availablePhoneNumbers = await client.availablePhoneNumbers.list();
-    // res.status(200).json(availablePhoneNumbers.data);
-    res.status(200).json();
+    res.status(200).json(availablePhoneNumbers.data);
+    // res.status(200).json();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

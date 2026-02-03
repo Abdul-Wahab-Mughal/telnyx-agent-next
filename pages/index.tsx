@@ -29,7 +29,7 @@ export default function AssistantsTable() {
   const [assistants, setAssistants] = useState<Assistant[]>([]);
   const [model, setModel] = useState<Model[]>([]);
   const [phone, setPhone] = useState<Phone[]>([]);
-
+  const [purchaseablePhone, setPurchaseablePhone] = useState<Phone[]>([]);
   const [updateAgent, setUpdateAgent] = useState<Assistant | null>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,7 +44,7 @@ export default function AssistantsTable() {
     try {
       const res = await fetch("/api/telnyx/all-assistants");
       const data = await res.json();
-      // console.log(data);
+      console.log("assistants", data);
       setAssistants(data || []);
     } catch (error) {
       console.error("Failed to fetch assistants:", error);
@@ -68,17 +68,30 @@ export default function AssistantsTable() {
     try {
       const res = await fetch("/api/telnyx/all-phone");
       const data = await res.json();
-      console.log(data);
+      console.log("availablePhoneNumbers", data);
+
       setPhone(data || []);
       // console.log(phone);
     } catch (error) {
       console.log("failed to get Model List");
     }
   };
+
+  const listPurchaseablePhoneNumbers = async () => {
+    try {
+      const res = await fetch("/api/telnyx/purchaseable-phone");
+      const data = await res.json();
+      setPurchaseablePhone(data?.data || []);
+    } catch (error) {
+      console.log("failed to get Model List");
+    }
+  };
+
   useEffect(() => {
     fetchAssistants();
     getModel();
     getPhone();
+    listPurchaseablePhoneNumbers();
   }, []);
 
   // Create Agent
@@ -91,8 +104,12 @@ export default function AssistantsTable() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: value,
-            instructions: "These are the instructions for the new assistant",
+            instructions:
+              "You are an intelligent and concise voice assistant. This is a  happening on . The agent is at  and the user is at .",
+            greeting:
+              "Hi yo yo, this is Nyx, your friendly Telnyx Assistant! How can I help you today?",
             model: selectedModel,
+            enabled_features: ["telephony"],
           }),
         });
 
@@ -333,7 +350,7 @@ export default function AssistantsTable() {
                 placeholder="Name"
                 onChange={(e) =>
                   setUpdateAgent((prev) =>
-                    prev ? { ...prev, name: e.target.value } : null
+                    prev ? { ...prev, name: e.target.value } : null,
                   )
                 }
               />
@@ -346,7 +363,7 @@ export default function AssistantsTable() {
                 value={selectedModel}
                 onChange={(e) =>
                   setUpdateAgent((prev) =>
-                    prev ? { ...prev, model: e.target.value } : null
+                    prev ? { ...prev, model: e.target.value } : null,
                   )
                 }
               >
