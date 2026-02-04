@@ -323,7 +323,7 @@ export default function AssistantsTable() {
                 </option>
               </select>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 hidden">
               <label htmlFor="tool">Tools</label>
               <select
                 className="outline outline-2 outline-[#ddd]"
