@@ -24,6 +24,11 @@ interface Model {
 }
 
 interface Phone {
+  friendly_name: string;
+  status: string;
+  anchorsite_override: string;
+  created_at: any;
+  connection_name: string;
   id: string;
   phone_number: string;
   phone_number_type: string;
@@ -80,7 +85,7 @@ export default function AssistantsTable() {
       const res = await fetch("/api/telnyx/all-model");
       const data = await res.json();
       setModel(data || []);
-      // console.log(model);
+      // console.log(data);
     } catch (error) {
       console.log("failed to get Model List");
     }
@@ -289,8 +294,8 @@ export default function AssistantsTable() {
               <textarea
                 className="outline outline-2 outline-[#ddd]"
                 id="Instructions"
-                cols="30"
-                rows="5"
+                // cols="30"
+                // rows="5"
                 placeholder="Name"
                 onChange={(e) => setinstructions(e.target.value)}
               />
@@ -323,7 +328,10 @@ export default function AssistantsTable() {
                 </option>
               </select>
             </div>
-            <div className="flex flex-col gap-1 hidden">
+            <div
+              className="flex flex-col gap-1"
+              style={{ display: "none !important" }}
+            >
               <label htmlFor="tool">Tools</label>
               <select
                 className="outline outline-2 outline-[#ddd]"
@@ -579,8 +587,8 @@ export default function AssistantsTable() {
                   className="outline outline-2 outline-[#ddd]"
                   name=""
                   id="greeting"
-                  cols="20"
-                  rows="5"
+                  // cols="20"
+                  // rows="5"
                   value={updateAgent?.instructions || ""}
                   placeholder="Instructions"
                   onChange={(e) =>
