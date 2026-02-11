@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../app/globals.css";
+import Telnyx from "telnyx";
 
 interface Assistant {
   id: string;
@@ -42,6 +43,58 @@ interface Phone {
   }[];
 }
 
+const voiceList = [
+  {
+    id: "AWS.Polly.Joanna-Neural",
+    name: "Joanna",
+    language: "en-US",
+    provider: "aws",
+    gender: "Female",
+  },
+  {
+    id: "AWS.Polly.Salli-Neural",
+    name: "Salli",
+    language: "en-US",
+    provider: "aws",
+    gender: "Female",
+  },
+  {
+    id: "AWS.Polly.Kendra-Neural",
+    name: "Kendra",
+    language: "en-US",
+    provider: "aws",
+    gender: "Female",
+  },
+  {
+    id: "AWS.Polly.Matthew-Neural",
+    name: "Matthew",
+    language: "en-US",
+    provider: "aws",
+    gender: "Male",
+  },
+  {
+    id: "AWS.Polly.Joey-Neural",
+    name: "Joey",
+    language: "en-US",
+    provider: "aws",
+    gender: "Male",
+  },
+  {
+    id: "AWS.Polly.Justin-Neural",
+    name: "Justin",
+    language: "en-US",
+    provider: "aws",
+    gender: "Male",
+  },
+];
+
+const TELNYX_VOICES = [
+  { label: "Orion (Male)", value: "Telnyx.NaturalHD.orion" },
+  { label: "Aria (Female)", value: "Telnyx.NaturalHD.aria" },
+  { label: "Mira (Female)", value: "Telnyx.NaturalHD.mira" },
+  { label: "Luna (Female)", value: "Telnyx.NaturalHD.luna" },
+];
+
 export default function AssistantsTable() {
   const [value, setValue] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
@@ -63,6 +116,70 @@ export default function AssistantsTable() {
   const [loading, setLoading] = useState<boolean>(false);
   const [updateBox, setUpdateBox] = useState<boolean>(false);
 
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+  const [previewingVoiceId, setPreviewingVoiceId] = useState<string | null>(
+    null
+  );
+  const [isLoadingVoices, setIsLoadingVoices] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sampleText = "Hello, I am your AI assistant. How can I help you today?";
+
+  useEffect(() => {
+    return () => {
+      // Cleanup audio on unmount
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handlePreview = async (voiceId: string) => {
+    // Stop any current playback
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    if (previewingVoiceId === voiceId && isPreviewPlaying) {
+      setIsPreviewPlaying(false);
+      setPreviewingVoiceId(null);
+      return;
+    }
+
+    try {
+      setPreviewingVoiceId(voiceId);
+      setIsPreviewPlaying(true);
+      console.log(voiceId, sampleText);
+
+      const blob = await fetch("/api/telnyx/test-voice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voiceId, sampleText }),
+      });
+      console.log(blob);
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setIsPreviewPlaying(false);
+        setPreviewingVoiceId(null);
+        URL.revokeObjectURL(url);
+      };
+      audio.onerror = () => {
+        setIsPreviewPlaying(false);
+        setPreviewingVoiceId(null);
+        URL.revokeObjectURL(url);
+      };
+
+      await audio.play();
+    } catch (error) {
+      setIsPreviewPlaying(false);
+      setPreviewingVoiceId(null);
+    }
+  };
+
   //
   // Fetch
   //
@@ -72,7 +189,7 @@ export default function AssistantsTable() {
     try {
       const res = await fetch("/api/telnyx/all-assistants");
       const data = await res.json();
-      console.log(data);
+      console.log("data: ", data);
       setAssistants(data || []);
     } catch (error) {
       console.error("Failed to fetch assistants:", error);
@@ -256,6 +373,45 @@ export default function AssistantsTable() {
   return (
     <>
       <div style={{ padding: "2rem" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
+          {voiceList.map((voice) => (
+            <div
+              key={voice.id}
+              className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-all hover:bg-muted/50`}
+              // onClick={() => field.onChange(voice.id)}
+            >
+              <div className="flex flex-col gap-1 min-w-0">
+                <span className="font-medium text-sm truncate">
+                  {voice.name}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="text-[10px] h-5 px-1.5 font-normal capitalize">
+                    {voice.gender}
+                  </div>
+                  <div className="text-[10px] h-5 px-1.5 font-normal">
+                    {voice.language?.split("-")[1] || "US"}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="h-8 w-8 shrink-0 hover:bg-background/80"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePreview(voice.id);
+                }}
+              >
+                {previewingVoiceId === voice.id && isPreviewPlaying
+                  ? // <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    "loader"
+                  : // <Volume2 className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                    "volime"}
+              </button>
+            </div>
+          ))}
+        </div>
+
         <h1 className="text-5xl font-bold text-center pb-10">
           Telnyx Assistants
         </h1>
@@ -507,7 +663,7 @@ export default function AssistantsTable() {
           </thead>
           <tbody>
             {phone
-              .filter((ph) => new Date(ph.created_at) > new Date("2026-01-14"))
+              // .filter((ph) => new Date(ph.created_at) > new Date("2026-01-14"))
               .map((ph) => (
                 <tr key={ph.id}>
                   <td className="outline outline-1 outline-[#ddd] p-2 max-w-[22ch] overflow-hidden whitespace-nowrap text-ellipsis">
