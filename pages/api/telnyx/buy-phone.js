@@ -7,7 +7,13 @@ export default async function handler(req, res) {
 
   // Automatically fetches more pages as needed.
   try {
-    const availablePhoneNumbers = await client.availablePhoneNumbers.list();
+    const availablePhoneNumbers = await client.availablePhoneNumbers.list({
+      filter: {
+        country_code: "US",
+        administrative_area: "MN",
+        phone_number_type: "local",
+      },
+    });
 
     res.status(200).json(availablePhoneNumbers.data);
   } catch (error) {

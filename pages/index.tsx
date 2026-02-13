@@ -226,7 +226,7 @@ export default function AssistantsTable() {
     try {
       const res = await fetch("/api/telnyx/buy-phone");
       const data = await res.json();
-      // console.log(data);
+      console.log("buy phone: ",data);
       setBuyPhone(data || []);
       // console.log(phone);
     } catch (error) {
